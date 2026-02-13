@@ -21,18 +21,132 @@
         "symbol-z-order": "auto",
         "text-allow-overlap": false,
         "text-anchor": "top",
-        "text-field": {
-          "stops": [
+        "text-field": [
+          "step",
+          [
+            "zoom"
+          ],
+          " ",
+          11,
+          [
+            "case",
             [
-              8,
-              " "
+              ">",
+              [
+                "length",
+                [
+                  "coalesce",
+                  [
+                    "get",
+                    "name:zh-Hant"
+                  ],
+                  [
+                    "get",
+                    "name:zh"
+                  ],
+                  [
+                    "get",
+                    "name"
+                  ],
+                  ""
+                ]
+              ],
+              0
             ],
             [
-              11,
-              "{name}"
+              "concat",
+              [
+                "coalesce",
+                [
+                  "get",
+                  "name:zh-Hant"
+                ],
+                [
+                  "get",
+                  "name:zh"
+                ],
+                [
+                  "get",
+                  "name"
+                ]
+              ],
+              [
+                "case",
+                [
+                  "all",
+                  [
+                    ">",
+                    [
+                      "length",
+                      [
+                        "coalesce",
+                        [
+                          "get",
+                          "name:en"
+                        ],
+                        ""
+                      ]
+                    ],
+                    0
+                  ],
+                  [
+                    "!=",
+                    [
+                      "coalesce",
+                      [
+                        "get",
+                        "name:zh-Hant"
+                      ],
+                      [
+                        "get",
+                        "name:zh"
+                      ],
+                      [
+                        "get",
+                        "name"
+                      ]
+                    ],
+                    [
+                      "coalesce",
+                      [
+                        "get",
+                        "name:en"
+                      ],
+                      ""
+                    ]
+                  ]
+                ],
+                [
+                  "concat",
+                  " ",
+                  [
+                    "coalesce",
+                    [
+                      "get",
+                      "name:en"
+                    ],
+                    [
+                      "get",
+                      "name"
+                    ]
+                  ]
+                ],
+                ""
+              ]
+            ],
+            [
+              "coalesce",
+              [
+                "get",
+                "name:en"
+              ],
+              [
+                "get",
+                "name"
+              ]
             ]
           ]
-        },
+        ],
         "text-font": [
           "Open Sans Italic",
           "Noto Sans Italic"

@@ -16,18 +16,141 @@
           ]
         ],
         "text-anchor": "top",
-        "text-field": {
-          "stops": [
+        "text-field": [
+          "step",
+          [
+            "zoom"
+          ],
+          " ",
+          12,
+          [
+            "concat",
             [
-              6,
-              " "
+              "case",
+              [
+                ">",
+                [
+                  "length",
+                  [
+                    "coalesce",
+                    [
+                      "get",
+                      "name:zh-Hant"
+                    ],
+                    [
+                      "get",
+                      "name:zh"
+                    ],
+                    [
+                      "get",
+                      "name"
+                    ],
+                    ""
+                  ]
+                ],
+                0
+              ],
+              [
+                "concat",
+                [
+                  "coalesce",
+                  [
+                    "get",
+                    "name:zh-Hant"
+                  ],
+                  [
+                    "get",
+                    "name:zh"
+                  ],
+                  [
+                    "get",
+                    "name"
+                  ]
+                ],
+                [
+                  "case",
+                  [
+                    "all",
+                    [
+                      ">",
+                      [
+                        "length",
+                        [
+                          "coalesce",
+                          [
+                            "get",
+                            "name:en"
+                          ],
+                          ""
+                        ]
+                      ],
+                      0
+                    ],
+                    [
+                      "!=",
+                      [
+                        "coalesce",
+                        [
+                          "get",
+                          "name:zh-Hant"
+                        ],
+                        [
+                          "get",
+                          "name:zh"
+                        ],
+                        [
+                          "get",
+                          "name"
+                        ]
+                      ],
+                      [
+                        "coalesce",
+                        [
+                          "get",
+                          "name:en"
+                        ],
+                        ""
+                      ]
+                    ]
+                  ],
+                  [
+                    "concat",
+                    " ",
+                    [
+                      "coalesce",
+                      [
+                        "get",
+                        "name:en"
+                      ],
+                      [
+                        "get",
+                        "name"
+                      ]
+                    ]
+                  ],
+                  ""
+                ]
+              ],
+              [
+                "coalesce",
+                [
+                  "get",
+                  "name:en"
+                ],
+                [
+                  "get",
+                  "name"
+                ]
+              ]
             ],
+            " ",
             [
-              12,
-              "{name} {ele}m"
-            ]
+              "get",
+              "ele"
+            ],
+            "m"
           ]
-        },
+        ],
         "text-font": [
           "Open Sans Regular",
           "Noto Sans Regular"
@@ -75,18 +198,141 @@
           ]
         ],
         "text-anchor": "top",
-        "text-field": {
-          "stops": [
+        "text-field": [
+          "step",
+          [
+            "zoom"
+          ],
+          " ",
+          12,
+          [
+            "concat",
             [
-              6,
-              " "
+              "case",
+              [
+                ">",
+                [
+                  "length",
+                  [
+                    "coalesce",
+                    [
+                      "get",
+                      "name:zh-Hant"
+                    ],
+                    [
+                      "get",
+                      "name:zh"
+                    ],
+                    [
+                      "get",
+                      "name"
+                    ],
+                    ""
+                  ]
+                ],
+                0
+              ],
+              [
+                "concat",
+                [
+                  "coalesce",
+                  [
+                    "get",
+                    "name:zh-Hant"
+                  ],
+                  [
+                    "get",
+                    "name:zh"
+                  ],
+                  [
+                    "get",
+                    "name"
+                  ]
+                ],
+                [
+                  "case",
+                  [
+                    "all",
+                    [
+                      ">",
+                      [
+                        "length",
+                        [
+                          "coalesce",
+                          [
+                            "get",
+                            "name:en"
+                          ],
+                          ""
+                        ]
+                      ],
+                      0
+                    ],
+                    [
+                      "!=",
+                      [
+                        "coalesce",
+                        [
+                          "get",
+                          "name:zh-Hant"
+                        ],
+                        [
+                          "get",
+                          "name:zh"
+                        ],
+                        [
+                          "get",
+                          "name"
+                        ]
+                      ],
+                      [
+                        "coalesce",
+                        [
+                          "get",
+                          "name:en"
+                        ],
+                        ""
+                      ]
+                    ]
+                  ],
+                  [
+                    "concat",
+                    " ",
+                    [
+                      "coalesce",
+                      [
+                        "get",
+                        "name:en"
+                      ],
+                      [
+                        "get",
+                        "name"
+                      ]
+                    ]
+                  ],
+                  ""
+                ]
+              ],
+              [
+                "coalesce",
+                [
+                  "get",
+                  "name:en"
+                ],
+                [
+                  "get",
+                  "name"
+                ]
+              ]
             ],
+            " ",
             [
-              12,
-              "{name} {ele}m"
-            ]
+              "get",
+              "ele"
+            ],
+            "m"
           ]
-        },
+        ],
         "text-font": [
           "Open Sans Regular",
           "Noto Sans Regular"
