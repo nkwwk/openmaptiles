@@ -1,0 +1,81 @@
+# Run quickstart.sh and make download-fonts via Dockerfile.tileserver builder stage,
+# then build a tileserver-gl image with the compiled data/style/build.
+
+name: Quickstart and Tileserver GL Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  quickstart-tileserver:
+    name: Quickstart and build tileserver image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Prepare env for quickstart
+        run: |
+          echo MIN_ZOOM=0 >> .env
+          echo MAX_ZOOM=14 >> .env
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build builder image (runs quickstart + download-fonts)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.tileserver
+          target: builder
+          push: false
+          load: true
+          tags: openmaptiles-builder:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run quickstart and download-fonts in builder
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD":/workspace \
+            -w /workspace \
+            -e area=asia/china/hong_kong \
+            -e QUIET=1 \
+            openmaptiles-builder:latest \
+            sh -c './quickstart.sh asia/china/hong_kong && make download-fonts'
+
+      - name: Build tileserver-gl image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.tileserver
+          target: tileserver
+          push: false
+          load: true
+          tags: openmaptiles-tileserver:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Push to GitHub Container Registry
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/master-tools')
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile.tileserver
+          target: tileserver
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/openmaptiles-tileserver:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/openmaptiles-tileserver:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Save quickstart.log
+        uses: actions/upload-artifact@v6
+        with:
+          name: quickstart.log
+          path: quickstart.log

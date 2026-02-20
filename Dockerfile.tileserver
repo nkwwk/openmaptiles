@@ -1,0 +1,38 @@
+# Tileserver-gl image with compiled OpenMapTiles data, style, and build artifacts.
+#
+# Stage 1 (builder): runs quickstart.sh and make download-fonts. Must be run with
+# the host Docker socket and workspace mounted so it can use docker compose:
+#   docker build -f Dockerfile.tileserver --target builder -t openmaptiles-builder .
+#   docker run -v /var/run/docker.sock:/var/run/docker.sock -v "$(pwd)":/workspace -w /workspace \
+#     -e area=asia/china/hong_kong -e QUIET=1 openmaptiles-builder \
+#     sh -c "./quickstart.sh \$area && make download-fonts"
+#
+# Stage 2 (tileserver): copy data/style/build from context (produced by builder) and serve.
+#   docker build -f Dockerfile.tileserver --target tileserver -t openmaptiles-tileserver .
+#
+# Run the final image:
+#   docker run -p 8080:8080 openmaptiles-tileserver
+
+# -----------------------------------------------------------------------------
+# Stage 1: builder — run this image with Docker socket + workspace mounted,
+# then build the tileserver stage with the resulting context.
+# -----------------------------------------------------------------------------
+FROM docker:24 AS builder
+RUN apk add --no-cache make bash git
+COPY . /workspace
+WORKDIR /workspace
+# Default: run quickstart and download-fonts (override with docker run ... <cmd>)
+ENV area=asia/china/hong_kong
+ENV QUIET=1
+CMD ["./quickstart.sh", "asia/china/hong_kong"]
+# Override at run time, e.g.: docker run ... builder sh -c './quickstart.sh $area && make download-fonts'
+
+# -----------------------------------------------------------------------------
+# Stage 2: tileserver — build after running builder; context must have data/, style/, build/
+# -----------------------------------------------------------------------------
+FROM maptiler/tileserver-gl:latest AS tileserver
+COPY data/ /data/
+COPY style/ /style/
+COPY build/ /build/
+EXPOSE 8080
+CMD ["--port", "8080", "--config", "/style/config.json"]
