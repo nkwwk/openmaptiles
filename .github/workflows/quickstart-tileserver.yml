@@ -1,5 +1,4 @@
-# Run quickstart.sh and make download-fonts via Dockerfile.tileserver builder stage,
-# then build a tileserver-gl image with the compiled data/style/build.
+# Run quickstart.sh and make download-fonts in a container, then build a tileserver-gl image.
 
 name: Quickstart and Tileserver GL Image
 
@@ -25,19 +24,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build builder image (runs quickstart + download-fonts)
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: ./Dockerfile.tileserver
-          target: builder
-          push: false
-          load: true
-          tags: openmaptiles-builder:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Run quickstart and download-fonts in builder
+      - name: Run quickstart and download-fonts
         run: |
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
@@ -45,8 +32,8 @@ jobs:
             -w /workspace \
             -e area=asia/china/hong_kong \
             -e QUIET=1 \
-            openmaptiles-builder:latest \
-            sh -c './quickstart.sh asia/china/hong_kong && make download-fonts'
+            docker:24 \
+            sh -c 'apk add --no-cache make bash git && git config --global --add safe.directory /workspace && ./quickstart.sh asia/china/hong_kong && make download-fonts'
 
       - name: Build tileserver-gl image
         uses: docker/build-push-action@v6
